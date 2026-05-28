@@ -1,4 +1,2 @@
-export const DashboardPage = (): JSX.Element => {
-  const cards = ['Tareas pendientes','Peticiones abiertas','Actas pendientes','Próximas sesiones','Estado de sincronización','Último backup'];
-  return <section className="cards">{cards.map((c) => <article key={c} className="card"><h3>{c}</h3><p>Dato mock</p></article>)}</section>;
-};
+import { useEffect, useState } from 'react';
+export const DashboardPage = (): JSX.Element => { const [stats,setStats]=useState<any>(); useEffect(()=>{window.rrllAPI.dashboard.stats().then(setStats);},[]); const cards=[['Tareas pendientes',stats?.tareasPendientes],['Tareas en curso',stats?.tareasEnCurso],['Peticiones pendientes',stats?.peticionesPendientes],['Peticiones en curso',stats?.peticionesEnCurso],['Actas pendientes',stats?.actasPendientes],['Próx. comité',stats?.proximasComite?.length],['Próx. paritaria',stats?.proximasParitaria?.length]]; return <section className="cards">{cards.map(([c,v])=><article key={String(c)} className="card"><h3>{c}</h3><p>{v??'-'}</p></article>)}</section>;};
