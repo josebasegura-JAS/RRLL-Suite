@@ -55,3 +55,8 @@ export const ticketsService = {
     return res;
   }
 };
+
+
+export const ticketsQueries = {
+  listComputos: () => getDbInstance().prepare('SELECT * FROM tickets_computos ORDER BY id DESC LIMIT 100').all()
+};

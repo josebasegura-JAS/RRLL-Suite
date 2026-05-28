@@ -1,5 +1,4 @@
 import { app, ipcMain } from 'electron';
-import path from 'node:path';
 import { createBackup } from '../backups/backup.js';
 import { analyzeDatabase, checkDatabaseConnection, checkDatabaseIntegrity, fallbackToLocalDatabase, getCurrentDatabaseMode, getCurrentDatabasePath, getDatabaseStats, getSyncStatus, setLocalDatabasePath, setNetworkDatabasePath, switchDatabasePath, testDatabasePath } from '../database/database.js';
 import { tareasService } from '../../domain/services/tareasService.js';
@@ -7,7 +6,7 @@ import { peticionesService } from '../../domain/services/peticionesService.js';
 import { comiteService } from '../../domain/services/comiteService.js';
 import { paritariaService } from '../../domain/services/paritariaService.js';
 import { actasService } from '../../domain/services/actasService.js';
-import { teletrabajoService, ticketsService } from '../../domain/services/phase3Service.js';
+import { teletrabajoService, ticketsQueries, ticketsService } from '../../domain/services/phase3Service.js';
 
 export const registerIpc = (): void => {
   ipcMain.handle('db:getPath', () => getCurrentDatabasePath());
@@ -49,6 +48,7 @@ export const registerIpc = (): void => {
   ipcMain.handle('teletrabajo:updateEstado', (_e, id:number, estado:string) => teletrabajoService.updateEstado(id, estado));
   ipcMain.handle('tickets:importAusencia', (_e, i:any) => ticketsService.importAusencia(i));
   ipcMain.handle('tickets:generarComputo', (_e, inicio:string, fin:string, unit:number) => ticketsService.generarComputo(inicio, fin, unit));
+  ipcMain.handle('tickets:listComputos', () => ticketsQueries.listComputos());
 
   ipcMain.handle('dashboard:stats', async () => ({
     tareasPendientes: tareasService.search({ estado: 'pendiente' }).length,
