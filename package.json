@@ -1,0 +1,58 @@
+{
+  "name": "rrll-dashboard-next",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RRLL Dashboard Next - Fase 1",
+  "main": "dist/main/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:main\" \"npm:dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:electron": "wait-on tcp:5173 dist/main/main.js && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .",
+    "build": "npm run build:renderer && npm run build:main",
+    "build:renderer": "vite build",
+    "build:main": "tsc -p tsconfig.main.json",
+    "package": "npm run build && electron-builder",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "dev:main": "tsc -p tsconfig.main.json --watch"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "electron-store": "^10.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
+    "@vitejs/plugin-react": "^4.5.2",
+    "concurrently": "^9.2.1",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vitest": "^2.1.9",
+    "wait-on": "^8.0.3",
+    "cross-env": "^7.0.3"
+  },
+  "build": {
+    "appId": "com.rrll.dashboard.next",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    }
+  }
+}

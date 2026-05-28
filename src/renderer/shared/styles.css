@@ -1,0 +1,12 @@
+body { margin: 0; font-family: Inter, Arial, sans-serif; }
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+.sidebar { background: #252a33; color: #fff; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.sidebar a { color: #d9dce2; text-decoration: none; }
+.content { background: #f6f8fb; }
+header { display:flex; justify-content:space-between; padding:16px 20px; background:#fff; border-bottom:1px solid #e5e7eb; }
+main { padding: 20px; }
+.cards { display:grid; grid-template-columns:repeat(3, minmax(180px,1fr)); gap:16px; }
+.card { background:#fff; border-radius:10px; padding:14px; }
+.badge { padding: 4px 10px; border-radius: 999px; color:#fff; }
+.ok { background:#16a34a; } .err { background:#dc2626; } .wait { background:#ea580c; }
+button { margin-right:8px; }
