@@ -160,6 +160,81 @@ export const initDatabase = (): string => {
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
     );
+
+
+    CREATE TABLE IF NOT EXISTS teletrabajo_solicitudes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      numero_empleado TEXT NOT NULL,
+      nombre TEXT NOT NULL,
+      apellidos TEXT NOT NULL,
+      martes INTEGER NOT NULL,
+      miercoles INTEGER NOT NULL,
+      jueves INTEGER NOT NULL,
+      tipo TEXT NOT NULL,
+      estado TEXT NOT NULL,
+      seguridad_informatica_ok INTEGER NOT NULL,
+      prevencion_ok INTEGER NOT NULL,
+      observaciones TEXT,
+      fecha_solicitud TEXT NOT NULL,
+      fecha_resolucion TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS tickets_personas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      numero_empleado TEXT NOT NULL UNIQUE,
+      nombre TEXT NOT NULL,
+      apellidos TEXT NOT NULL,
+      colectivo TEXT,
+      derecho_ticket INTEGER NOT NULL DEFAULT 1,
+      activo INTEGER NOT NULL DEFAULT 1,
+      observaciones TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS tickets_ausencias (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      numero_empleado TEXT NOT NULL,
+      tipo_ausencia TEXT NOT NULL,
+      fecha_inicio TEXT NOT NULL,
+      fecha_fin TEXT NOT NULL,
+      afecta_ticket INTEGER NOT NULL,
+      origen_importacion TEXT,
+      observaciones TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE(numero_empleado,tipo_ausencia,fecha_inicio,fecha_fin)
+    );
+
+    CREATE TABLE IF NOT EXISTS tickets_computos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      numero_empleado TEXT NOT NULL,
+      periodo_inicio TEXT NOT NULL,
+      periodo_fin TEXT NOT NULL,
+      dias_teoricos INTEGER NOT NULL,
+      dias_ausencia_descuento INTEGER NOT NULL,
+      dias_ticket INTEGER NOT NULL,
+      importe_unitario REAL NOT NULL,
+      importe_total REAL NOT NULL,
+      detalle_json TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS import_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tipo TEXT NOT NULL,
+      archivo TEXT NOT NULL,
+      estado TEXT NOT NULL,
+      filas_leidas INTEGER NOT NULL,
+      filas_importadas INTEGER NOT NULL,
+      filas_error INTEGER NOT NULL,
+      resumen_json TEXT,
+      created_at TEXT NOT NULL
+    );
+
   `);
 
   return syncStatus;

@@ -1,0 +1,1 @@
+export const buildPrintableHtml = (title: string, rows: Record<string, unknown>[]): string => `<!doctype html><html><body><h1>${title}</h1><small>${new Date().toISOString()}</small><pre>${JSON.stringify(rows, null, 2)}</pre></body></html>`;
