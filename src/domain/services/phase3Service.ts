@@ -60,3 +60,39 @@ export const ticketsService = {
 export const ticketsQueries = {
   listComputos: () => getDbInstance().prepare('SELECT * FROM tickets_computos ORDER BY id DESC LIMIT 100').all()
 };
+
+
+export const ticketsPersonasService = {
+  list: () => getDbInstance().prepare('SELECT * FROM tickets_personas ORDER BY activo DESC, apellidos ASC, nombre ASC').all(),
+  create: (input: any) => {
+    const db = getDbInstance();
+    const payload = {
+      numero_empleado: String(input.numero_empleado ?? '').trim(),
+      nombre: String(input.nombre ?? '').trim(),
+      apellidos: String(input.apellidos ?? '').trim(),
+      colectivo: String(input.colectivo ?? '').trim(),
+      derecho_ticket: input.derecho_ticket ? 1 : 0,
+      activo: input.activo === undefined ? 1 : (input.activo ? 1 : 0)
+    };
+    const r = db.prepare('INSERT INTO tickets_personas (numero_empleado,nombre,apellidos,colectivo,derecho_ticket,activo,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)').run(payload.numero_empleado, payload.nombre, payload.apellidos, payload.colectivo, payload.derecho_ticket, payload.activo, now(), now());
+    return db.prepare('SELECT * FROM tickets_personas WHERE id=?').get(r.lastInsertRowid);
+  },
+  update: (id: number, input: any) => {
+    const db = getDbInstance();
+    const current = db.prepare('SELECT * FROM tickets_personas WHERE id=?').get(id) as any;
+    if (!current) return null;
+    const next = {
+      numero_empleado: String(input.numero_empleado ?? current.numero_empleado).trim(),
+      nombre: String(input.nombre ?? current.nombre).trim(),
+      apellidos: String(input.apellidos ?? current.apellidos).trim(),
+      colectivo: String(input.colectivo ?? current.colectivo ?? '').trim(),
+      derecho_ticket: input.derecho_ticket === undefined ? current.derecho_ticket : (input.derecho_ticket ? 1 : 0),
+      activo: input.activo === undefined ? current.activo : (input.activo ? 1 : 0)
+    };
+    db.prepare('UPDATE tickets_personas SET numero_empleado=?, nombre=?, apellidos=?, colectivo=?, derecho_ticket=?, activo=?, updated_at=? WHERE id=?').run(next.numero_empleado, next.nombre, next.apellidos, next.colectivo, next.derecho_ticket, next.activo, now(), id);
+    return db.prepare('SELECT * FROM tickets_personas WHERE id=?').get(id);
+  },
+  remove: (id: number) => {
+    getDbInstance().prepare('DELETE FROM tickets_personas WHERE id=?').run(id);
+  }
+};
