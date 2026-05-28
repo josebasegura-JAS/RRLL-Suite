@@ -1,7 +1,7 @@
 import { app, ipcMain } from 'electron';
 import path from 'node:path';
 import { createBackup } from '../backups/backup.js';
-import { checkDatabaseConnection, getDatabasePath, getSyncStatus, setDatabasePath } from '../database/database.js';
+import { analyzeDatabase, checkDatabaseConnection, checkDatabaseIntegrity, fallbackToLocalDatabase, getCurrentDatabaseMode, getCurrentDatabasePath, getDatabaseStats, getSyncStatus, setLocalDatabasePath, setNetworkDatabasePath, switchDatabasePath, testDatabasePath } from '../database/database.js';
 import { tareasService } from '../../domain/services/tareasService.js';
 import { peticionesService } from '../../domain/services/peticionesService.js';
 import { comiteService } from '../../domain/services/comiteService.js';
@@ -10,13 +10,16 @@ import { actasService } from '../../domain/services/actasService.js';
 import { teletrabajoService, ticketsService } from '../../domain/services/phase3Service.js';
 
 export const registerIpc = (): void => {
-  ipcMain.handle('db:getPath', () => getDatabasePath());
-  ipcMain.handle('db:setPath', (_e, newPath: string) => setDatabasePath(newPath));
-  ipcMain.handle('db:resetLocal', () => {
-    const localPath = path.join(app.getPath('userData'), 'data', 'rrll-dashboard-next.sqlite');
-    setDatabasePath(localPath);
-    return localPath;
-  });
+  ipcMain.handle('db:getPath', () => getCurrentDatabasePath());
+  ipcMain.handle('db:getMode', () => getCurrentDatabaseMode());
+  ipcMain.handle('db:setNetworkPath', (_e, p: string) => setNetworkDatabasePath(p));
+  ipcMain.handle('db:resetLocal', () => setLocalDatabasePath());
+  ipcMain.handle('db:testPath', (_e, p: string) => testDatabasePath(p));
+  ipcMain.handle('db:switchPath', (_e, p: string) => switchDatabasePath(p));
+  ipcMain.handle('db:fallbackLocal', (_e, reason: string) => fallbackToLocalDatabase(reason));
+  ipcMain.handle('db:stats', () => getDatabaseStats());
+  ipcMain.handle('db:integrity', () => checkDatabaseIntegrity());
+  ipcMain.handle('db:analyze', () => analyzeDatabase());
   ipcMain.handle('db:checkConnection', () => checkDatabaseConnection());
   ipcMain.handle('db:createBackup', (_e, reason: string) => createBackup(reason));
   ipcMain.handle('db:getSyncStatus', () => getSyncStatus());

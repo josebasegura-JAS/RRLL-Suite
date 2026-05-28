@@ -1,0 +1,20 @@
+name: windows-portable
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      - run: npm run build:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rrll-dashboard-next-portable-exe
+          path: dist/*.exe

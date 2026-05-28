@@ -15,7 +15,9 @@
     "package": "npm run build && electron-builder",
     "lint": "eslint .",
     "test": "vitest run",
-    "dev:main": "tsc -p tsconfig.main.json --watch"
+    "dev:main": "tsc -p tsconfig.main.json --watch",
+    "dist": "npm run package",
+    "build:win": "npm run build && electron-builder --win portable"
   },
   "dependencies": {
     "better-sqlite3": "^11.10.0",
@@ -55,7 +57,9 @@
       "package.json"
     ],
     "win": {
-      "target": "nsis"
+      "target": [
+        "portable"
+      ]
     }
   }
 }
