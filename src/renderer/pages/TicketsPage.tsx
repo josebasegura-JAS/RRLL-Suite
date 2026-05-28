@@ -27,7 +27,7 @@ export const TicketsPage = (): JSX.Element => {
       <button type="submit">Crear persona</button>
     </form>
     <h3>Personas activas</h3>
-    <ul>{personas.filter((p)=>p.activo===1).map((p)=><li key={p.id}>{p.numero_empleado} - {p.nombre} {p.apellidos} ({p.colectivo || 'sin colectivo'}) · derecho_ticket: {p.derecho_ticket===1?'sí':'no'}</li>)}</ul>
+    <ul>{personas.filter((p)=>p.activo===1 || p.activo===true).map((p)=><li key={p.id}>{p.numero_empleado} - {p.nombre} {p.apellidos} ({p.colectivo || 'sin colectivo'}) · derecho_ticket: {(p.derecho_ticket===1 || p.derecho_ticket===true)?'sí':'no'}</li>)}</ul>
 
     <form onSubmit={(e)=>void importar(e)}><h3>Importar ausencia manual</h3>
       <input placeholder="Nº empleado" value={ausencia.numero_empleado} onChange={(e)=>setAusencia({...ausencia,numero_empleado:e.target.value})} required />
