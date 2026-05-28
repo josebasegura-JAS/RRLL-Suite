@@ -7,6 +7,7 @@ import { peticionesService } from '../../domain/services/peticionesService.js';
 import { comiteService } from '../../domain/services/comiteService.js';
 import { paritariaService } from '../../domain/services/paritariaService.js';
 import { actasService } from '../../domain/services/actasService.js';
+import { teletrabajoService, ticketsService } from '../../domain/services/phase3Service.js';
 
 export const registerIpc = (): void => {
   ipcMain.handle('db:getPath', () => getDatabasePath());
@@ -39,6 +40,13 @@ export const registerIpc = (): void => {
     ipcMain.handle(`${n}:points:remove`, (_e, id:number) => svc.points.remove(id));
     ipcMain.handle(`${n}:points:reorder`, (_e, sid:number, ids:number[]) => svc.points.reorderPoints(sid, ids));
   }
+
+  ipcMain.handle('teletrabajo:list', () => teletrabajoService.list());
+  ipcMain.handle('teletrabajo:create', (_e, i:any) => teletrabajoService.create(i));
+  ipcMain.handle('teletrabajo:updateEstado', (_e, id:number, estado:string) => teletrabajoService.updateEstado(id, estado));
+  ipcMain.handle('tickets:importAusencia', (_e, i:any) => ticketsService.importAusencia(i));
+  ipcMain.handle('tickets:generarComputo', (_e, inicio:string, fin:string, unit:number) => ticketsService.generarComputo(inicio, fin, unit));
+
   ipcMain.handle('dashboard:stats', async () => ({
     tareasPendientes: tareasService.search({ estado: 'pendiente' }).length,
     tareasEnCurso: tareasService.search({ estado: 'en_curso' }).length,
@@ -46,6 +54,8 @@ export const registerIpc = (): void => {
     peticionesEnCurso: peticionesService.search({ estado: 'en_curso' }).length,
     actasPendientes: actasService.search({ estado: 'pendiente_hacer' }).length,
     proximasComite: comiteService.sessions.list().filter((x:any) => x.estado === 'prevista').slice(0, 5),
-    proximasParitaria: paritariaService.sessions.list().filter((x:any) => x.estado === 'prevista').slice(0, 5)
+    proximasParitaria: paritariaService.sessions.list().filter((x:any) => x.estado === 'prevista').slice(0, 5),
+    teletrabajoPendiente: teletrabajoService.list().filter((x:any)=>x.estado==='pendiente').length,
+    teletrabajoAprobada: teletrabajoService.list().filter((x:any)=>x.estado==='aprobada').length
   }));
 };
