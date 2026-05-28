@@ -1,0 +1,15 @@
+export type EstadoBase = 'pendiente' | 'en_curso' | 'cerrada';
+export type Prioridad = 'baja' | 'media' | 'alta';
+export type TipoPeticionario = 'sindicato' | 'empresa' | 'interno' | 'otro';
+export type EstadoSesion = 'prevista' | 'celebrada' | 'cerrada';
+export type OrganoActa = 'comite' | 'paritaria' | 'otro';
+export type EstadoActa = 'pendiente_hacer' | 'enviada_direccion' | 'pendiente_alegaciones' | 'pendiente_firma' | 'firmada' | 'archivada';
+export type Tarea = { id:number; titulo:string; descripcion?:string; origen?:string; estado:EstadoBase; prioridad:Prioridad; fecha_limite?:string; fecha_creacion:string; fecha_actualizacion:string; fecha_cierre?:string|null; notas?:string };
+export type Peticion = { id:number; titulo:string; descripcion?:string; peticionario?:string; tipo_peticionario:TipoPeticionario; estado:EstadoBase; prioridad:Prioridad; fecha_entrada:string; fecha_limite?:string; fecha_cierre?:string|null; notas?:string };
+export type SesionComite = { id:number; fecha:string; tipo:'ordinario'|'extraordinario'; titulo:string; estado:EstadoSesion; observaciones?:string; created_at:string; updated_at:string };
+export type PuntoComite = { id:number; sesion_id:number; titulo:string; descripcion?:string; peticionario?:string; orden:number; estado:string; acuerdo?:string; observaciones?:string; created_at:string; updated_at:string };
+export type SesionParitaria = { id:number; fecha:string; titulo:string; estado:EstadoSesion; observaciones?:string; created_at:string; updated_at:string };
+export type PuntoParitaria = { id:number; sesion_id:number; titulo:string; descripcion?:string; peticionario?:string; orden:number; estado:string; criterio_rd?:string; acuerdo?:string; observaciones?:string; created_at:string; updated_at:string };
+export type Acta = { id:number; titulo:string; organo:OrganoActa; fecha_reunion:string; estado:EstadoActa; sindicatos_alegaciones?:string; fecha_envio_direccion?:string; fecha_limite_alegaciones?:string; fecha_firma?:string; observaciones?:string; created_at:string; updated_at:string };
+export type CreateInput<T> = Omit<T,'id'>;
+export type UpdateInput<T> = Partial<Omit<T,'id'>>;

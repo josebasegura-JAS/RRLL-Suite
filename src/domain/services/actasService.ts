@@ -1,0 +1,2 @@
+import { actasRepository } from '../repositories/actasRepository.js';import { nowIso } from '../repositories/common.js';import { requireText } from '../schemas/validators.js';
+export const actasService={list:actasRepository.list,getById:actasRepository.getById,remove:actasRepository.remove,search:actasRepository.search,create:(i:any)=>{requireText(i.titulo,'titulo');const now=nowIso();return actasRepository.create({...i,created_at:now,updated_at:now});},update:(id:number,i:any)=>actasRepository.update(id,{...i,updated_at:nowIso()})};
